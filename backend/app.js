@@ -1,9 +1,13 @@
 const express = require('express');
 const handlebars = require('express-handlebars');
-const frontend = __dirname + '/../frontend';
+const path = require('node:path')
+
+const frontend = __dirname + "../frontend";
+const port = 5000
+path.resolve(__dirname)
 
 const app = express();
-
+const router = require("./router.js")
 app.engine(
     '.hbs',
     handlebars.engine({
@@ -11,15 +15,11 @@ app.engine(
         defaultLayout: 'main',
     })
 );
-app.set('views', `${frontend}/views`);
+app.set('views', `views`);
 app.set('view engine', '.hbs');
-app.get('/', (req, res) => {
-    res.render('home', {
-        title: 'Greetings form Handlebars',
-        qwe: 123
-    });
-});
 
-app.listen(5000, function () {
-    console.log('Server started!');
+app.use(router)
+
+app.listen(port, function () {
+    console.log(`http://localhost:${port}`);
 });
