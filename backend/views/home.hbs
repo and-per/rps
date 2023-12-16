@@ -18,7 +18,7 @@
       <div class="menu">
         <div class="play">
           <div class="score">
-            <div>Computer Score: 0 - {{{player}}} Score: 0</div>
+            <div>Computer Score: 0 - Player Score: 0</div>
           </div>
           <div id="result">Game result:</div>
         </div>
@@ -33,13 +33,14 @@
       </div>
     </div>
     <div class="right">
-        <div class="input-block"></div>
-        <form action="/signin">
-                <div>Введите имя игрока</div>
-                <input type="text" id="username">
-                <button id="apply-max">Войти</button>
-        </form>
-        </div>
+            <form action="/signin">
+                <div class="input-block">
+                    <div>Введите имя игрока</div>
+                    <input type="text" id="username" name="username">
+                    <button id="apply-max">Войти</button>
+                </div>
+            </form>
+
       <div class="stats">
         <div>Общая статистика</div>
         <ol>
