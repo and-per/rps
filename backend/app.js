@@ -5,21 +5,20 @@ const frontend = __dirname + '/../frontend';
 const app = express();
 
 app.engine(
-    'handlebars',
+    '.hbs',
     handlebars.engine({
+        extname: '.hbs',
         defaultLayout: 'main',
-        
     })
 );
 app.set('views', `${frontend}/views`);
-app.set('view engine', 'handlebars');
+app.set('view engine', '.hbs');
 app.get('/', (req, res) => {
     res.render('home', {
         title: 'Greetings form Handlebars',
+        qwe: 123
     });
 });
-
-app.use('/', express.static(`${__dirname}/../frontend)`);
 
 app.listen(5000, function () {
     console.log('Server started!');

@@ -1,88 +1,85 @@
 const rock = 'rock';
 const paper = 'paper';
 const scissors = 'scissors';
-const gameElements = [rock, paper, scissors];
-let score = 0;
-let PCscore = 0;
-let Won = false;
+const scoreTable = document.querySelector('.score');
+const gameResult = document.getElementById('result');
+const restart = document.getElementById('restart');
 
-const gameItems = document.querySelectorAll('.gameItem');
-const scoretext = document.querySelector('.Score')
-const restartbtn = document.querySelector('.Restart')
-const result = document.querySelector('.RoundR')
+let maxRounds = 3;
 
+const playerWin = 0;
+const computerWin = 1;
+const tie = 2;
 
+let computerScore = 0;
+let playerScore = 0;
+let isGameOver = false;
 
+function restartGame() {
+    computerScore = playerScore = 0;
+    isGameOver = false;
+}
 
-
-
-
-
-gameItems.forEach(item => {
-    item.addEventListener('click', () => {
-        if (Won === false){
-            let answer = computerPlay()
-            console.log("Player: " + item.alt);
-            console.log("Computer: " + answer);
-            if (CheckPlrAnswer(item.alt, answer) === true) {
-                score++
-            }else if(CheckPlrAnswer(item.alt, answer) === false){
-                PCscore++  
-            }
-            console.log(score + ':' + PCscore)
-            if (score == 10 || PCscore == 10) {
-                if (score > PCscore) {
-                    result .innerHTML = "Player Won"
-                    scoretext.innerHTML = "Game ended, Computer Score: " + PCscore + " - Player Score: " + score
-                    Won = true
-                }else if (score < PCscore) {
-                    result.innerHTML = "Computer Won"
-                    scoretext.innerHTML = "Game ended, Computer Score: " + PCscore +" - Player Score: " + score
-                    Won = true
-                }
-            }else{
-                scoretext.innerHTML = "Computer Score: " + PCscore + " - Player Score: " + score
-            }
-        }else{
-            console.log("game already ended, please restart")
-        }
-    });
-}); 
-
-
-
-
-
-restartbtn.addEventListener('click', () => {
-    score = 0;
-    PCscore = 0;
-    scoretext.innerHTML = "Computer Score: " + PCscore + " - Player Score: " + score;
-    result.innerHTML = ""
-    Won = false;
+restart.addEventListener('click', function () {
+    restartGame();
+    scoreTable.textContent = `Computer Score: ${computerScore} - Player Score: ${playerScore}`;
+    gameResult.textContent = 'Game result:';
 })
 
+const gameItems = document.querySelectorAll('.gameItem');
+for (let i = 0; i < gameItems.length; i++) {
+    const item = gameItems[i];
+    item.addEventListener('click', function () {
+        if (isGameOver) {
+            return;
+        }
+        const playerChoose = item.alt;
+        const computerChoose = computerPlay();
+        playRound(playerChoose, computerChoose);
+    });
+}
 
+function playRound(player, computer) {
+    if (player === computer) {
+        gameResult.textContent = 'Game result: TIE';
+        return tie;
+    }
+    const isPlayerWin = (player === rock && computer !== paper) ||
+                      (player === scissors && computer !== rock) ||
+                      (player === paper && computer !== scissors);
 
+    if (isPlayerWin) {
+        gameResult.textContent = 'Game result: Player WON';
+        playerScore++;
+    } else {
+        gameResult.textContent = 'Game result: Computer WON';
+        computerScore++;
+    }
+    scoreTable.textContent = `Computer Score: ${computerScore} - Player Score: ${playerScore}`;
+    console.log(maxRounds, "max")
+    console.log(computerScore, "cs")
+    console.log(playerScore, "ps")
 
-
-function CheckPlrAnswer(Plr, PC) {
-    if (Plr === "rock" && PC === "scissors") {
-        return true;
-    }else if (Plr === "paper" && PC === "rock") {
-        return true;
-    }else if (Plr === "scissors" && PC === "paper") {
-        return true;
-    }else if (Plr === PC){
-        return "Tie";
-    }else{
-        return false;
+    if (playerScore >= maxRounds || computerScore >= maxRounds) {
+        isGameOver = true;
+        scoreTable.textContent = `Game over: ${scoreTable.textContent}`;
+        if (playerScore > computerScore) {
+            gameResult.textContent = 'Game result: Player WON';
+        } else {
+            gameResult.textContent = 'Game result: Computer WON';
+        }
     }
 }
 
-
-
-
 function computerPlay() {
-    const i = Math.round(Math.random() * 2);
+    const gameElements = [rock, paper, scissors];
+    const i = Math.floor(Math.random() * gameElements.length);
     return gameElements[i];
 }
+
+const maxScoreBtn = document.getElementById('apply-max');
+const maxScore = document.getElementById('max-games')
+maxScoreBtn.addEventListener('click', () => {
+    restartGame();
+    maxRounds = maxScore.value;
+})
